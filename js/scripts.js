@@ -184,23 +184,23 @@ $(document).ready(function () {
         },
         data: {
             // Event title
-            title: "Ram and Antara's Wedding",
+            title: "Gerhard en Tarryn se troue",
 
             // Event start date
-            start: new Date('Nov 27, 2017 10:00'),
+            start: new Date('Nov 16, 2024 16:00'),
 
             // Event duration (IN MINUTES)
             // duration: 120,
 
             // You can also choose to set an end time
             // If an end time is set, this will take precedence over duration
-            end: new Date('Nov 29, 2017 00:00'),
+            end: new Date('Nov 17, 2024 00:00'),
 
             // Event Address
-            address: 'ITC Fortune Park Hotel, Kolkata',
+            address: 'Candlewoods Country Estate, Candlewoods Ln, Centurion, Pretoria, 0157',
 
             // Event Description
-            description: "We can't wait to see you on our big day. For any queries or issues, please contact Mr. Amit Roy at +91 9876543210."
+            description: "Ons kan nie wag om jou op ons groot dag te sien nie. Vir enige navrae of kwessies, kontak asseblief Gerhard Maré by +27 0820411118."
         }
     });
 
@@ -209,31 +209,110 @@ $(document).ready(function () {
 
     /********************** RSVP **********************/
     $('#rsvp-form').on('submit', function (e) {
-        e.preventDefault();
-        var data = $(this).serialize();
-
-        $('#alert-wrapper').html(alert_markup('info', '<strong>Just a sec!</strong> We are saving your details.'));
-
-        if (MD5($('#invite_code').val()) !== 'b0e53b10c1f55ede516b240036b88f40'
-            && MD5($('#invite_code').val()) !== '2ac7f43695eb0479d5846bb38eec59cc') {
-            $('#alert-wrapper').html(alert_markup('danger', '<strong>Sorry!</strong> Your invite code is incorrect.'));
-        } else {
-            $.post('https://script.google.com/macros/s/AKfycbyo0rEknln8LedEP3bkONsfOh776IR5lFidLhJFQ6jdvRiH4dKvHZmtoIybvnxpxYr2cA/exec', data)
-                .done(function (data) {
-                    console.log(data);
-                    if (data.result === "error") {
-                        $('#alert-wrapper').html(alert_markup('danger', data.message));
-                    } else {
-                        $('#alert-wrapper').html('');
-                        $('#rsvp-modal').modal('show');
-                    }
-                })
-                .fail(function (data) {
-                    console.log(data);
-                    $('#alert-wrapper').html(alert_markup('danger', '<strong>Sorry!</strong> There is some issue with the server. '));
-                });
+        // get all data in form and return object
+        function getFormData(form) {
+          var elements = form.elements;
+          var honeypot;
+      
+          var fields = Object.keys(elements).filter(function(k) {
+            if (elements[k].name === "honeypot") {
+              honeypot = elements[k].value;
+              return false;
+            }
+            return true;
+          }).map(function(k) {
+            if(elements[k].name !== undefined) {
+              return elements[k].name;
+            // special case for Edge's html collection
+            }else if(elements[k].length > 0){
+              return elements[k].item(0).name;
+            }
+          }).filter(function(item, pos, self) {
+            return self.indexOf(item) == pos && item;
+          });
+      
+          var formData = {};
+          fields.forEach(function(name){
+            var element = elements[name];
+            
+            // singular form elements just have one value
+            formData[name] = element.value;
+      
+            // when our element has multiple items, get their values
+            if (element.length) {
+              var data = [];
+              for (var i = 0; i < element.length; i++) {
+                var item = element.item(i);
+                if (item.checked || item.selected) {
+                  data.push(item.value);
+                }
+              }
+              formData[name] = data.join(', ');
+            }
+          });
+      
+          // add form-specific values into the data
+          formData.formDataNameOrder = JSON.stringify(fields);
+          formData.formGoogleSheetName = form.dataset.sheet || "responses"; // default sheet name
+          formData.formGoogleSendEmail
+            = form.dataset.email || ""; // no email by default
+      
+          return {data: formData, honeypot: honeypot};
         }
-    });
+      
+        function handleFormSubmit(event) {  // handles form submit without any jquery
+          event.preventDefault();           // we are submitting via xhr below
+          var form = event.target;
+          var formData = getFormData(form);
+          var data = formData.data;
+      
+          // If a honeypot field is filled, assume it was done so by a spam bot.
+          if (formData.honeypot) {
+            return false;
+          }
+      
+          disableAllButtons(form);
+          var url = form.action;
+          var xhr = new XMLHttpRequest();
+          xhr.open('POST', url);
+          // xhr.withCredentials = true;
+          xhr.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
+          xhr.onreadystatechange = function() {
+              if (xhr.readyState === 4 && xhr.status === 200) {
+                form.reset();
+                var formElements = form.querySelector(".form-elements")
+                if (formElements) {
+                  formElements.style.display = "none"; // hide form
+                }
+                var thankYouMessage = form.querySelector(".thankyou_message");
+                if (thankYouMessage) {
+                  thankYouMessage.style.display = "block";
+                }
+              }
+          };
+          // url encode form data for sending as post data
+          var encoded = Object.keys(data).map(function(k) {
+              return encodeURIComponent(k) + "=" + encodeURIComponent(data[k]);
+          }).join('&');
+          xhr.send(encoded);
+        }
+        
+        function loaded() {
+          // bind to the submit event of our form
+          var forms = document.querySelectorAll("form.gform");
+          for (var i = 0; i < forms.length; i++) {
+            forms[i].addEventListener("submit", handleFormSubmit, false);
+          }
+        };
+        document.addEventListener("DOMContentLoaded", loaded, false);
+      
+        function disableAllButtons(form) {
+          var buttons = form.querySelectorAll("button");
+          for (var i = 0; i < buttons.length; i++) {
+            buttons[i].disabled = true;
+          }
+        }
+      });
 
 });
 
