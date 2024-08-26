@@ -167,12 +167,10 @@ $(document).ready(function () {
 
     /********************** Toggle Map Content **********************/
     $('#btn-show-map').click(function () {
-        $('#map-content').toggleClass('toggle-map-content');
-        $('#btn-show-content').toggleClass('toggle-map-content');
+        window.open('https://maps.app.goo.gl/MLCRNZG33A7ArkyT8', '_blank');
     });
     $('#btn-show-content').click(function () {
-        $('#map-content').toggleClass('toggle-map-content');
-        $('#btn-show-content').toggleClass('toggle-map-content');
+        window.open('https://maps.app.goo.gl/MLCRNZG33A7ArkyT8', '_blank');
     });
 
     /********************** Add to Calendar **********************/
