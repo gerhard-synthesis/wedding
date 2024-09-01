@@ -449,6 +449,7 @@ section .header {
       -moz-background-size: cover;
       -o-background-size: cover;
       background-size: contain;
+      background-repeat: no-repeat;
       position: relative;
     }
   }
