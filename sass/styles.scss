@@ -286,20 +286,6 @@ Hero
   }
 }
 
-@media only screen and (max-width: 768px) {
-  .hero {
-      background-position: center center;
-      background-size: cover;
-      text-align: left; /* Align text to the left */
-      margin-left: 10%; /* Shift content to the left */
-      transform: translateX(-10%); /* Adjust this percentage to fine-tune the horizontal shift */
-  }
-
-  .hero .hero-content {
-      padding-top: 40%; /* Adjust this value to change vertical centering */
-      width: 70%; /* Adjust the image size for mobile */
-  }
-}
 
 .navigation {
   transition: all 300ms ease-in-out;
