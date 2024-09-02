@@ -441,7 +441,7 @@ section .header {
 	margin-bottom: 12%
 }
 
-@media only screen and (max-width: 768px) {
+/* @media only screen and (max-width: 768px) {
     .hero {
       min-height: 750px;
       background: url('../img/hero-min.jpg') center center;
@@ -452,7 +452,7 @@ section .header {
       background-repeat: no-repeat;
       position: relative;
     }
-  }
+  } */
 
 .navigation {
 	transition: all 300ms ease-in-out;
