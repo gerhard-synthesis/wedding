@@ -287,18 +287,43 @@ Hero
   }
 }
 
-// @media only screen and (max-width: 768px) {
-//   .hero {
-//     min-height: 750px;
-//     background: url('../img/hero-min.jpg') center center;
-//     -webkit-background-size: cover;
-//     -moz-background-size: cover;
-//     -o-background-size: cover;
-//     background-size: contain;
-//     background-repeat: no-repeat;
-//     position: relative;
-//   }
-// }
+@media only screen and (max-width: 768px) {
+	.hero {
+		min-height: 750px;
+		background: url("../img/hero-min.jpg") center center;
+		-webkit-background-size: cover;
+		-moz-background-size: cover;
+		-o-background-size: cover;
+		background-size: contain;
+      	background-repeat: no-repeat;
+		position: relative
+	}
+	
+	.hero .down-arrow a {
+		color: #fff
+	}
+	
+	.hero h1 {
+		color: #fff;
+		margin-bottom: 40px
+	}
+	
+	.hero p.intro {
+		color: #fff;
+		font-size: 20px;
+		font-weight: 300;
+		margin-bottom: 80px
+	}
+	
+	.hero .hero-content {
+		padding-top: 40%
+	}
+	
+	.hero .hero-content img {
+		width: 55%;
+		margin-bottom: 12%
+	}
+}
 
 
 .navigation {
